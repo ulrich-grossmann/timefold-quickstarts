@@ -14,10 +14,9 @@ public class Lesson {
     private String teacher;
     private String studentGroup;
 
-    @PlanningVariable
     private Timeslot timeslot;
 
-    @PlanningVariable
+
     private Room room;
 
     // No-arg constructor required for Timefold
@@ -62,20 +61,34 @@ public class Lesson {
         return studentGroup;
     }
 
+    // We have to annotate planning variables on the getter otherwise
+    // timefold will not use our changed setter.
+    @PlanningVariable
     public Timeslot getTimeslot() {
         return timeslot;
     }
 
     public void setTimeslot(Timeslot timeslot) {
+        IncrementalCountingConstraint.TEACHER_CONFLICT.beforeVariableChange(this);
+        IncrementalCountingConstraint.ROOM_CONFLICT.beforeVariableChange(this);
+        IncrementalCountingConstraint.STUDENT_GROUP_CONFLICT.beforeVariableChange(this);
         this.timeslot = timeslot;
+        IncrementalCountingConstraint.TEACHER_CONFLICT.afterVariableChange(this);
+        IncrementalCountingConstraint.ROOM_CONFLICT.afterVariableChange(this);
+        IncrementalCountingConstraint.STUDENT_GROUP_CONFLICT.afterVariableChange(this);
     }
 
+    // We have to annotate planning variables on the getter otherwise
+    // timefold will not use our changed setter.
+    @PlanningVariable
     public Room getRoom() {
         return room;
     }
 
     public void setRoom(Room room) {
+        IncrementalCountingConstraint.ROOM_CONFLICT.beforeVariableChange(this);
         this.room = room;
+        IncrementalCountingConstraint.ROOM_CONFLICT.afterVariableChange(this);
     }
 
 }

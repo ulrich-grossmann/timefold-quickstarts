@@ -37,10 +37,10 @@ public class TimetableApp {
                 .withConstraintProviderClass(TimetableConstraintProvider.class)
                 // The solver runs only for 5 seconds on this small dataset.
                 // It's recommended to run for at least 5 minutes ("5m") otherwise.
-                .withTerminationSpentLimit(Duration.ofSeconds(5)));
+                .withTerminationSpentLimit(Duration.ofMinutes(1)));
 
         // Load the problem
-        Timetable problem = generateDemoData(DemoData.SMALL);
+        Timetable problem = generateDemoData(DemoData.LARGE);
 
         // Solve the problem
         Solver<Timetable> solver = solverFactory.buildSolver();
@@ -230,17 +230,17 @@ public class TimetableApp {
                     timeslot.getDayOfWeek().toString().substring(0, 3) + " " + timeslot.getStartTime()) + " | "
                     + cells.stream().map(cellLessons -> String.format("%-10s",
                             cellLessons.stream().map(Lesson::getSubject).collect(Collectors.joining(", "))))
-                            .collect(Collectors.joining(" | "))
+                    .collect(Collectors.joining(" | "))
                     + " |");
             LOGGER.info("|            | "
                     + cells.stream().map(cellLessons -> String.format("%-10s",
                             cellLessons.stream().map(Lesson::getTeacher).collect(Collectors.joining(", "))))
-                            .collect(Collectors.joining(" | "))
+                    .collect(Collectors.joining(" | "))
                     + " |");
             LOGGER.info("|            | "
                     + cells.stream().map(cellLessons -> String.format("%-10s",
                             cellLessons.stream().map(Lesson::getStudentGroup).collect(Collectors.joining(", "))))
-                            .collect(Collectors.joining(" | "))
+                    .collect(Collectors.joining(" | "))
                     + " |");
             LOGGER.info("|" + "------------|".repeat(rooms.size() + 1));
         }
