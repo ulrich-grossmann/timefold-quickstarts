@@ -2,7 +2,6 @@ package org.acme.schooltimetabling.domain;
 
 import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
 import ai.timefold.solver.core.api.score.stream.Constraint;
-import ai.timefold.solver.core.api.score.stream.ConstraintCollectors;
 import ai.timefold.solver.core.api.score.stream.ConstraintFactory;
 
 import java.util.HashMap;
@@ -54,8 +53,8 @@ public enum IncrementalCountingConstraint {
 
   public Constraint defineConstraint(ConstraintFactory constraintFactory) {
     // All lessons are grouped together and penalized with the total conflict count.
-    return constraintFactory.forEach(Lesson.class).groupBy(t->0, ConstraintCollectors.toList())
-            .penalize(HardSoftScore.ofHard(1),(key,list)-> totalCollisionsCount)
+    return constraintFactory.forEach(Lesson.class).groupBy(t->0)
+            .penalize(HardSoftScore.ofHard(1),key-> totalCollisionsCount)
             .asConstraint(constraintId);
   }
 
