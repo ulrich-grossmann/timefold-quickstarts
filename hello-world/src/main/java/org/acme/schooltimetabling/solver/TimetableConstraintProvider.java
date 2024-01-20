@@ -5,14 +5,8 @@ import ai.timefold.solver.core.api.score.stream.Constraint;
 import ai.timefold.solver.core.api.score.stream.ConstraintFactory;
 import ai.timefold.solver.core.api.score.stream.ConstraintProvider;
 import ai.timefold.solver.core.api.score.stream.Joiners;
-import org.acme.schooltimetabling.domain.IncrementalCountingConstraint;
 import org.acme.schooltimetabling.domain.Lesson;
-import org.acme.schooltimetabling.solver.justifications.RoomConflictJustification;
-import org.acme.schooltimetabling.solver.justifications.StudentGroupConflictJustification;
-import org.acme.schooltimetabling.solver.justifications.StudentGroupSubjectVarietyJustification;
-import org.acme.schooltimetabling.solver.justifications.TeacherConflictJustification;
-import org.acme.schooltimetabling.solver.justifications.TeacherRoomStabilityJustification;
-import org.acme.schooltimetabling.solver.justifications.TeacherTimeEfficiencyJustification;
+import org.acme.schooltimetabling.solver.justifications.*;
 
 import java.time.Duration;
 
@@ -20,20 +14,24 @@ public class TimetableConstraintProvider implements ConstraintProvider {
 
   @Override
   public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
-    return new Constraint[] {
+    return new Constraint[]{
             // Hard constraints
 //            roomConflict(constraintFactory),
 //            teacherConflict(constraintFactory),
 //            studentGroupConflict(constraintFactory),
-            IncrementalCountingConstraint.ROOM_CONFLICT.defineConstraint(constraintFactory),
-            IncrementalCountingConstraint.TEACHER_CONFLICT.defineConstraint(constraintFactory),
-            IncrementalCountingConstraint.STUDENT_GROUP_CONFLICT.defineConstraint(constraintFactory)
+            incrementalUnifiedConflictConstraint(constraintFactory)
 
             // Soft constraints
 //                teacherRoomStability(constraintFactory),
 //                teacherTimeEfficiency(constraintFactory),
 //                studentGroupSubjectVariety(constraintFactory)
     };
+  }
+
+  Constraint incrementalUnifiedConflictConstraint(ConstraintFactory constraintFactory) {
+    return constraintFactory.forEach(Lesson.class).groupBy(new CollectFirstLessonUniCostraintCollector())
+            .penalize(HardSoftScore.ofHard(1), Lesson::getTotalScore)
+            .asConstraint("Teacher, Student group or Room conflict");
   }
 
   Constraint roomConflict(ConstraintFactory constraintFactory) {

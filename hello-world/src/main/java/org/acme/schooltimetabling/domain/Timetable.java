@@ -1,9 +1,6 @@
 package org.acme.schooltimetabling.domain;
 
-import ai.timefold.solver.core.api.domain.solution.PlanningEntityCollectionProperty;
-import ai.timefold.solver.core.api.domain.solution.PlanningScore;
-import ai.timefold.solver.core.api.domain.solution.PlanningSolution;
-import ai.timefold.solver.core.api.domain.solution.ProblemFactCollectionProperty;
+import ai.timefold.solver.core.api.domain.solution.*;
 import ai.timefold.solver.core.api.domain.valuerange.ValueRangeProvider;
 import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
 import ai.timefold.solver.core.api.solver.SolverStatus;
@@ -23,7 +20,6 @@ public class Timetable {
     private List<Room> rooms;
     @PlanningEntityCollectionProperty
     private List<Lesson> lessons;
-
     @PlanningScore
     private HardSoftScore score;
 

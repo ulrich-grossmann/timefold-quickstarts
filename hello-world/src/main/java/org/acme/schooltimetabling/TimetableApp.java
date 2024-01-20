@@ -14,11 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TimetableApp {
@@ -34,7 +30,15 @@ public class TimetableApp {
         SolverFactory<Timetable> solverFactory = SolverFactory.create(new SolverConfig()
                 .withSolutionClass(Timetable.class)
                 .withEntityClasses(Lesson.class)
+//                        .withScoreDirectorFactory(new ScoreDirectorFactoryConfig()
+//                                .withIncrementalScoreCalculatorClass(JavaIncrementalCalculatorUsingGlobalState.class)
+//
+//
+//                        )
+
                 .withConstraintProviderClass(TimetableConstraintProvider.class)
+
+                                //.withEnvironmentMode(EnvironmentMode.FULL_ASSERT)
                 // The solver runs only for 5 seconds on this small dataset.
                 // It's recommended to run for at least 5 minutes ("5m") otherwise.
                 .withTerminationSpentLimit(Duration.ofMinutes(1)));
@@ -52,7 +56,7 @@ public class TimetableApp {
 
     public static Timetable generateDemoData(DemoData demoData) {
         List<Timeslot> timeslots = new ArrayList<>(10);
-        long nextTimeslotId = 0L;
+        int nextTimeslotId = 0;
         timeslots.add(new Timeslot(nextTimeslotId++, DayOfWeek.MONDAY, LocalTime.of(8, 30), LocalTime.of(9, 30)));
         timeslots.add(new Timeslot(nextTimeslotId++, DayOfWeek.MONDAY, LocalTime.of(9, 30), LocalTime.of(10, 30)));
         timeslots.add(new Timeslot(nextTimeslotId++, DayOfWeek.MONDAY, LocalTime.of(10, 30), LocalTime.of(11, 30)));
