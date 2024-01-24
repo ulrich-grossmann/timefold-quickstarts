@@ -4,19 +4,14 @@ import ai.timefold.solver.core.api.domain.entity.PlanningEntity;
 import ai.timefold.solver.core.api.domain.lookup.PlanningId;
 import ai.timefold.solver.core.api.domain.variable.PlanningVariable;
 import ai.timefold.solver.core.api.domain.variable.ShadowVariable;
-import org.acme.schooltimetabling.solver.JavaIncrementalCalculator;
-import org.acme.schooltimetabling.solver.JavaIncrementalCalculatorPlugin;
+import org.acme.schooltimetabling.solver.ResetWorkingSolutionListener;
 
 @PlanningEntity
 public class Lesson {
 
-    @ShadowVariable(variableListenerClass = JavaIncrementalCalculatorPlugin.class,sourceVariableName= "timeslot")
-   // @ShadowVariable(variableListenerClass = JavaIncrementalCalculatorPlugin.class,sourceVariableName= "room")
-    public Integer getTotalScore(){
+    @ShadowVariable(variableListenerClass = ResetWorkingSolutionListener.class,sourceVariableName= "timeslot")
+     public Integer getFoo(){
         return 0;
-        //return JavaIncrementalCalculator.TEACHER_CONFLICTS.getTotalCollisionsCount();
-//                + JavaIncrementalCalculator.ROOM_CONFLICTS.getTotalCollisionsCount()
-//                + JavaIncrementalCalculator.STUDENT_GROUP_CONFLICTS.getTotalCollisionsCount();
     }
 
     @PlanningId
@@ -26,14 +21,11 @@ public class Lesson {
     private String teacher;
     private String studentGroup;
 
-    public void setTimeslot(Timeslot timeslot) throws InterruptedException {
-        //System.out.println("setting "+this+": "+this.getTimeslot()+"==>"+timeslot);
-        //Thread.sleep(100);
+    public void setTimeslot(Timeslot timeslot) {
         this.timeslot = timeslot;
     }
 
     public void setRoom(Room room) {
-        //System.out.println("setting "+this+": "+this.getTimeslot()+"==>"+timeslot);
         this.room = room;
     }
 

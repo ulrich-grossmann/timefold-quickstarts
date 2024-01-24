@@ -20,7 +20,6 @@ public class TimetableConstraintProvider implements ConstraintProvider {
 //            teacherConflict(constraintFactory),
 //            studentGroupConflict(constraintFactory),
             incrementalUnifiedConflictConstraint(constraintFactory)
-
             // Soft constraints
 //                teacherRoomStability(constraintFactory),
 //                teacherTimeEfficiency(constraintFactory),
@@ -29,16 +28,9 @@ public class TimetableConstraintProvider implements ConstraintProvider {
   }
 
   Constraint incrementalUnifiedConflictConstraint(ConstraintFactory constraintFactory) {
-    return constraintFactory.forEach(Lesson.class).groupBy(EvaluateChangesUniCostraintCollector.SINGLETON)
-            .penalize(HardSoftScore.ofHard(1),t->{
-//              System.out.println("="+t+"---------------------------------------");
-//              try {
-//                Thread.sleep(1);
-//              } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//              }
-              return t;
-            })
+    return constraintFactory.forEach(Lesson.class)
+            .groupBy(new EvaluateChangesUniConstraintCollector())
+            .penalize(HardSoftScore.ofHard(1),t->t)
             .asConstraint("Teacher, Student group or Room conflict");
   }
 

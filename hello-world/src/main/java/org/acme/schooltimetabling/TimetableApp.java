@@ -2,7 +2,6 @@ package org.acme.schooltimetabling;
 
 import ai.timefold.solver.core.api.solver.Solver;
 import ai.timefold.solver.core.api.solver.SolverFactory;
-import ai.timefold.solver.core.config.solver.EnvironmentMode;
 import ai.timefold.solver.core.config.solver.SolverConfig;
 import org.acme.schooltimetabling.domain.Lesson;
 import org.acme.schooltimetabling.domain.Room;
@@ -31,18 +30,11 @@ public class TimetableApp {
         SolverFactory<Timetable> solverFactory = SolverFactory.create(new SolverConfig()
                 .withSolutionClass(Timetable.class)
                 .withEntityClasses(Lesson.class)
-//                        .withScoreDirectorFactory(new ScoreDirectorFactoryConfig()
-//                                .withIncrementalScoreCalculatorClass(JavaIncrementalCalculatorUsingGlobalState.class)
-//
-//
-//                        )
-
                 .withConstraintProviderClass(TimetableConstraintProvider.class)
-
-                                .withEnvironmentMode(EnvironmentMode.FULL_ASSERT)
+                //.withEnvironmentMode(EnvironmentMode.FULL_ASSERT)//doesn't work
                 // The solver runs only for 5 seconds on this small dataset.
                 // It's recommended to run for at least 5 minutes ("5m") otherwise.
-                .withTerminationSpentLimit(Duration.ofMinutes(12)));
+                .withTerminationSpentLimit(Duration.ofMinutes(1)));
 
         // Load the problem
         Timetable problem = generateDemoData(DemoData.LARGE);
