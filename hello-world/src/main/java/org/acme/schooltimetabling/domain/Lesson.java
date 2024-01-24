@@ -4,18 +4,19 @@ import ai.timefold.solver.core.api.domain.entity.PlanningEntity;
 import ai.timefold.solver.core.api.domain.lookup.PlanningId;
 import ai.timefold.solver.core.api.domain.variable.PlanningVariable;
 import ai.timefold.solver.core.api.domain.variable.ShadowVariable;
+import org.acme.schooltimetabling.solver.JavaIncrementalCalculator;
 import org.acme.schooltimetabling.solver.JavaIncrementalCalculatorPlugin;
-import org.acme.schooltimetabling.solver.JavaIncrementalCalculatorUsingGlobalState;
 
 @PlanningEntity
 public class Lesson {
 
     @ShadowVariable(variableListenerClass = JavaIncrementalCalculatorPlugin.class,sourceVariableName= "timeslot")
-    @ShadowVariable(variableListenerClass = JavaIncrementalCalculatorPlugin.class,sourceVariableName= "room")
+   // @ShadowVariable(variableListenerClass = JavaIncrementalCalculatorPlugin.class,sourceVariableName= "room")
     public Integer getTotalScore(){
-        return JavaIncrementalCalculatorUsingGlobalState.TEACHER_CONFLICTS.getTotalCollisionsCount()
-                + JavaIncrementalCalculatorUsingGlobalState.ROOM_CONFLICTS.getTotalCollisionsCount()
-                + JavaIncrementalCalculatorUsingGlobalState.STUDENT_GROUP_CONFLICTS.getTotalCollisionsCount();
+        return 0;
+        //return JavaIncrementalCalculator.TEACHER_CONFLICTS.getTotalCollisionsCount();
+//                + JavaIncrementalCalculator.ROOM_CONFLICTS.getTotalCollisionsCount()
+//                + JavaIncrementalCalculator.STUDENT_GROUP_CONFLICTS.getTotalCollisionsCount();
     }
 
     @PlanningId
@@ -25,10 +26,19 @@ public class Lesson {
     private String teacher;
     private String studentGroup;
 
-    @PlanningVariable
+    public void setTimeslot(Timeslot timeslot) throws InterruptedException {
+        //System.out.println("setting "+this+": "+this.getTimeslot()+"==>"+timeslot);
+        //Thread.sleep(100);
+        this.timeslot = timeslot;
+    }
+
+    public void setRoom(Room room) {
+        //System.out.println("setting "+this+": "+this.getTimeslot()+"==>"+timeslot);
+        this.room = room;
+    }
+
     private Timeslot timeslot;
 
-    @PlanningVariable
     private Room room;
 
     // No-arg constructor required for Timefold
@@ -73,10 +83,12 @@ public class Lesson {
         return studentGroup;
     }
 
+    @PlanningVariable
     public Timeslot getTimeslot() {
         return timeslot;
     }
 
+    @PlanningVariable
     public Room getRoom() {
         return room;
     }
